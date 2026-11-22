@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tomica Shelf Organizer (Wiki Image Edition)</title>
+    <link rel="stylesheet" href="tomica.css" />
+  </head>
+  <body>
+    <div class="controls">
+      <button
+        id="premiumToggle"
+        type="button"
+        aria-pressed="false"
+        onclick="togglePremium()"
+      >
+        Premium
+      </button>
+      <input type="text" id="carNum" placeholder="box #" />
+      <input
+        type="text"
+        id="carName"
+        placeholder="car name or fandom wiki link"
+      />
+      <button id="searchWikiButton" onclick="searchWikiArticles()">
+        Search
+      </button>
+      <label for="carsPerRow">Cars per row</label>
+      <input
+        id="carsPerRow"
+        type="number"
+        min="1"
+        max="20"
+        step="1"
+        value="10"
+      />
+      <span class="status" id="statusText"></span>
+      <span class="controls-spacer"></span>
+      <button class="secondary" onclick="openImportDialog()">Import</button>
+      <button class="secondary" onclick="exportLayout()">Export</button>
+      <input
+        id="importFile"
+        type="file"
+        accept=".json,application/json"
+        onchange="importLayoutFile(event)"
+      />
+    </div>
+
+    <section
+      class="article-results"
+      id="articleResults"
+      aria-label="Tomica Wiki results"
+    >
+      <div
+        class="article-results-content"
+        id="articleResultsContent"
+        aria-live="polite"
+      >
+        <div class="article-carousel" id="articleCarousel">
+          <button
+            id="closeArticleResults"
+            class="secondary article-results-close"
+            type="button"
+            aria-label="Close Wiki results"
+            onclick="closeArticleResultsSection()"
+          >
+            ×
+          </button>
+          <div class="article-carousel-content" id="articleCarouselContent">
+            <button
+              class="article-option load-more-option"
+              type="button"
+              aria-label="Enter a car number, model name, or Wiki URL, then search"
+            >
+              Enter a car number, model name, or Wiki URL
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="shelf-container" id="shelves"></div>
+    <div class="bottom-controls">
+      <button id="lastActionButton" class="secondary" disabled>
+        Last action: —
+      </button>
+      <button
+        id="undoButton"
+        class="secondary"
+        onclick="undoLastAction()"
+        disabled
+      >
+        Undo
+      </button>
+      <span class="bottom-controls-spacer"></span>
+      <button
+        id="shelfImageToggle"
+        class="secondary"
+        type="button"
+        aria-label="Toggle shelf images between box art and car pictures"
+        aria-pressed="false"
+        onclick="toggleShelfImageMode()"
+      >
+        Shelf images: Box art
+      </button>
+    </div>
+
+    <dialog id="exportDialog" aria-labelledby="exportTitle">
+      <div class="export-dialog-content">
+        <h2 id="exportTitle">Export shelf layout</h2>
+        <label for="exportJson">Layout JSON</label>
+        <textarea id="exportJson" readonly spellcheck="false"></textarea>
+        <div class="export-actions">
+          <span class="status" id="exportStatus" aria-live="polite"></span>
+          <button type="button" class="secondary" onclick="closeExportDialog()">
+            Close
+          </button>
+          <button type="button" class="secondary" onclick="copyExportJson()">
+            Copy JSON
+          </button>
+          <button type="button" onclick="downloadExportJson()">
+            Download JSON
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="importDialog" aria-labelledby="importTitle">
+      <div class="import-dialog-content">
+        <h2 id="importTitle">Import shelf layout</h2>
+        <label for="importJson">Paste layout JSON</label>
+        <textarea
+          id="importJson"
+          placeholder="Paste exported layout JSON here"
+          spellcheck="false"
+        ></textarea>
+        <div class="import-actions">
+          <span class="status" id="importStatus" aria-live="polite"></span>
+          <button type="button" class="secondary" onclick="closeImportDialog()">
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="secondary"
+            onclick="document.getElementById('importFile').click()"
+          >
+            Choose JSON File
+          </button>
+          <button type="button" onclick="importLayoutText()">
+            Import Pasted JSON
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="imageSettingsDialog" aria-labelledby="imageSettingsTitle">
+      <div class="image-settings-content">
+        <h2 id="imageSettingsTitle">Image settings</h2>
+        <p>Choose an image for the box art and the car picture.</p>
+        <div id="imageSettingsList" class="image-settings-list"></div>
+        <div class="image-settings-actions">
+          <span
+            id="imageSettingsStatus"
+            class="status"
+            aria-live="polite"
+          ></span>
+          <button
+            type="button"
+            class="secondary"
+            onclick="closeImageSettings()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="tomica.js" defer></script>
+  </body>
+</html>
